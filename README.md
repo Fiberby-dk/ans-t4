@@ -8,7 +8,7 @@ access to information about the Starwars franchise. Ever wanted
 to know who directed the episode or characters that appears in 
 different Episodes?  
 SWAPI is your trusted friend and makes sure all the information 
-is up to date, whereever in the world you are. 
+is up to date, wherever in the world you are. 
 
 # Starwars?
 Starwars is a scifi/fantasy franchise. The first episode 
