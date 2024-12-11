@@ -28,6 +28,7 @@ class SwapiList(list):
 
 
 """
+NOTE
 Refactored the People class into "BaseEntity" class since both people and films are 
 sharing pretty much the same functionality, as well to make it easier to further 
 development to the SWAPI.
@@ -75,8 +76,9 @@ class Film(BaseEntity):
         super().__init__(**kwargs)
 
     """
+    NOTE
     A function that requests the information about the characters in the movie. 
-    However this fires of multiple of http requests that preferrably should be 
+    However this fires off multiple of http requests that preferrably should be 
     cached to increase the load time. 
     """
 
