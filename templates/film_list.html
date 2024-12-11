@@ -1,6 +1,6 @@
 <!doctype html>
 <head>
-    <title>People in Star Wars</title>
+    <title>Movies in the Star Wars franchise</title>
     <style>
         table {
             border-collapse: collapse;
@@ -25,16 +25,15 @@
     </style>
 </head>
 <body>
-<h1>List of people in Star Wars</h1>
+<h1>List of Movies</h1>
 <table>
-    {% for people in peoples %}
+    {% for film in films %}
     <tr>
-        <th>Name</th>
-        <td><a href="{{ url_for('people', people_id=people.id_from_url()) }}">{{ people.name }}</a></td>
+        <th>Title</th>
+        <td><a href="{{ url_for('film', film_id=film.id_from_url()) }}">{{ film.title }}</a></td>
     </tr>
     {% endfor %}
 </table>
-<!-- Fixed pagination -->
-{% if next.0 %}<a href="/people_list{{ next.0[1:] }}">{{ next.1 }}</a>{% endif %}
-{% if previous.0 %}<a href="/people_list{{ previous.0[1:0] }}">{{ previous.1 }}</a>{% endif %}
+{% if next.0 %}<a href="{{ next.0 }}">{{ next.1 }}</a>{% endif %}
+{% if previous.0 %}<a href="{{ previous.0 }}">{{ previous.1 }}</a>{% endif %}
 </body>

@@ -1,0 +1,73 @@
+<!doctype html>
+<head>
+    <title>{{ film.title }}</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            border: 1px solid black;
+            min-width: 20em;
+            max-width: 40em;
+        }
+        table th, table td {
+            border: 1px solid black;
+            padding: 2px 5px;
+            font-family: "Arial", sans-serif;
+            font-size: 12px;
+        }
+        table th {
+            background-color: #c0c0c0;
+            font-weight: bold;
+            text-align: left;
+        }
+        table td {
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+<h1>{{ film.title }}</h1>
+<p>
+<table>
+    <tr>
+        <th>
+            Director:
+        </th>
+        <td>
+            {{ film.director}}
+        </td>
+    </tr>
+    <tr>
+        <th>Producer:</th>
+        <td>
+            {{ film.producer }}
+        </td>
+    </tr>
+    <tr>
+        <th>Release date:</th>
+        <td>{{ film.release_date }}</td>
+    </tr>
+    <tr>
+        <th>
+            Abstract:</th>
+        </th>
+        <td>
+            {{ film.opening_crawl}}
+        </td>
+    </tr>
+    <tr>
+        <th>People</th>
+        <td>
+            <ul>
+
+
+            {% for people in film.people_list %}
+                <li><a href="/people/{{ people.url.split('/')[-2] }}">{{people.name}}</a></li>
+            {% endfor %}
+        </ul>
+        </td>
+    </tr>
+
+
+</tabel>
+</p>
+</body>

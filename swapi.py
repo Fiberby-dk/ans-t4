@@ -4,10 +4,13 @@ from urllib.parse import urlparse
 
 import requests
 
+
 class SwapiType:
     type_slug = None
+
     def __init__(self, **kwargs):
         self.data = kwargs
+
 
 class SwapiList(list):
     def __init__(self, obj_type: Type[SwapiType], **kwargs):
@@ -23,8 +26,16 @@ class SwapiList(list):
         if isinstance(obj, self.obj_type):
             super().append(obj)
 
-class People(SwapiType):
-    type_slug = 'people'
+
+"""
+Refactored the People class into "BaseEntity" class since both people and films are 
+sharing pretty much the same functionality, as well to make it easier to further 
+development to the SWAPI.
+"""
+
+
+class BaseEntity(SwapiType):
+    type_slug = ""
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -33,28 +44,61 @@ class People(SwapiType):
         print(self.data)
         if attr_name in self.data:
             return self.data[attr_name]
-        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{attr_name}'")
+        raise AttributeError(
+            f"'{self.__class__.__name__}' object has no attribute '{attr_name}'"
+        )
 
     def id_from_url(self) -> int:
-        if 'url' not in self.data:
+        if "url" not in self.data:
             raise ValueError("'url' not found in data")
-        path = urlparse(self.data['url']).path
-        path_parts = path.split('/')
+        path = urlparse(self.data["url"]).path
+        path_parts = path.split("/")
         print(path_parts)
-        print(self.data['url'])
-        if path_parts[1] != 'api' or path_parts[2] != self.type_slug:
+        print(self.data["url"])
+        if path_parts[1] != "api" or path_parts[2] != self.type_slug:
             raise Exception("Invalid API URL")
         return int(path_parts[3])
+
+
+class People(BaseEntity):
+    type_slug = "people"
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class Film(BaseEntity):
+    type_slug = "films"
+    people_list = []
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    """
+    A function that requests the information about the characters in the movie. 
+    However this fires of multiple of http requests that preferrably should be 
+    cached to increase the load time. 
+    """
+
+    def get_people(self):
+        people_list = []
+        for char in self.characters:
+            sess = requests.Session()
+            req = sess.get(char)
+            people_list.append(req.json())
+        self.people_list = people_list
 
 
 class Swapi:
     def __init__(self):
         self.session = requests.Session()
 
-    def get(self, obj_type: Type[SwapiType], page: int = None, obj_id: int = None) -> SwapiType | SwapiList:
+    def get(
+        self, obj_type: Type[SwapiType], page: int = None, obj_id: int = None
+    ) -> SwapiType | SwapiList:
         url = Swapi._build_request_url(obj_type, obj_id)
         if page is not None:
-            resp = self.session.get(url, params={'page': page})
+            resp = self.session.get(url, params={"page": page})
         else:
             resp = self.session.get(url)
         if obj_id is not None:
